@@ -28,10 +28,16 @@ define monitoring::service(
     # lint:ignore:variable_scope
     $cluster_name = hiera('cluster', $cluster)
     # lint:endignore
-    $servicegroups = $group ? {
-        /.+/    => $group,
-        default => hiera('nagios_group',"${cluster_name}_${::site}")
+    if ($domain == 'test') {
+        $servicegroups = "${role}_${datacenter}"
     }
+    else {
+        $servicegroups = $group ? {
+            /.+/    => $group,
+            default => hiera('nagios_group',"${cluster_name}_${::site}")
+        }
+    }
+
 
     $notification_interval = $critical ? {
         true    => 240,

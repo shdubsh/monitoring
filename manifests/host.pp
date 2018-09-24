@@ -25,13 +25,15 @@ define monitoring::host (
     # lint:ignore:variable_scope
     $cluster_name = hiera('cluster', $cluster)  # TODO: calls to hiera should not exist in this module
     # lint:endignore
-    $hostgroup = $group ? {
-        /.+/    => $group,
-        default => hiera('nagios_group',"${cluster_name}_${::site}")
+    if ($domain == 'test') {
+        $hostgroup = "${role}_${datacenter}"
     }
-
-
-
+    else {
+        $hostgroup = $group ? {
+            /.+/    => $group,
+            default => hiera('nagios_group',"${cluster_name}_${::site}")
+        }
+    }
 
     $real_contact_groups = $critical ? {
         true    => "${contact_group},sms,admins",
