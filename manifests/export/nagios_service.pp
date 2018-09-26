@@ -22,7 +22,6 @@ define monitoring::export::nagios_service (
     $freshness_threshold,
     $event_handler,
     $notes_url,
-    $mode = '0444'
 ) {
     @@nagios_service { $title:
         ensure                 => $ensure,
